@@ -26,6 +26,7 @@
 
 <form class="upload-form" id="upload-select-image" method="post"
       enctype="multipart/form-data"
+      action="https://1510.dump.academy/kekstagram"
       autocomplete="off">
   <div class="upload-image">
     <input type="file" id="upload-file" class="upload-input" name="filename" required>
@@ -38,7 +39,7 @@
         <button type="button"
                 class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-dec">–
         </button><!--
-        --><input type="text" class="upload-resize-control upload-resize-controls-value" value="55%" readonly title="Image Scale" name="scale"/><!--
+        --><input type="text" class="upload-resize-control upload-resize-controls-value" value="100%" min="25" max="100" step="25" required readonly title="Image Scale" name="scale"/><!--
         --><button type="button"
                 class="upload-resize-control upload-resize-controls-button upload-resize-controls-button-inc">+
         </button>
@@ -96,9 +97,9 @@
 
       <input class="upload-form-hashtags" name="hashtags" placeholder="#хэш-тег">
 
-      <textarea class="upload-form-description" name="description" placeholder="Ваш комментарий..."></textarea>
+      <textarea class="upload-form-description" name="description" placeholder="Ваш комментарий..." minlength="30" maxlength="100" required></textarea>
 
-      <button class="upload-form-cancel" type="reset" id="upload-cancel"></button>
+      <button class="upload-form-cancel" type="button" id="upload-cancel"></button>
       <button class="upload-form-submit" type="submit" id="upload-submit">Отправить</button>
     </div>
   </div>
@@ -160,5 +161,6 @@
 <script src="js/picture.js"></script>
 <script src="js/preview.js"></script>
 <script src="js/gallery.js"></script>
+<script src="js/form.js"></script>
 </body>
 </html>
