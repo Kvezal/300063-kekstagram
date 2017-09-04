@@ -209,10 +209,11 @@ body {
   border-radius: 2px;
 
   background: rgba(255, 255, 255, 0.2) url("../img/icon-cross.png") center no-repeat;
+  transform: translateX(-125%);
 }
 
 .upload-form-cancel:active {
-  transform: translateY(1px);
+  transform: translate(-125%, 1px);
 }
 
 /* Кадрирование */
