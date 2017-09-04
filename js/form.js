@@ -22,14 +22,27 @@
     resetCurrentEffect();
   };
 
+  var checkUploadFormHashtags = function () {
+    var hashtags = uploadFormHashtags.value.split(' ');
+    var hashtagsLength = hashtags.length;
+
+    return hashtags.some(function (item, index) {
+      for (var i = index + 1; i < hashtagsLength; i++) {
+        return hashtags[i] === item;
+      }
+
+      return false;
+    });
+  };
+
   var formSubmitHandler = function (evt) {
-    if (uploadFormDescription.value.length >= 30) {
+    if (uploadFormDescription.value.length >= 30 && uploadFormHashtags.validity.valid && !checkUploadFormHashtags()) {
       hiddenUploadOverlay();
 
       resizeImage(effectImagePreview, +uploadResizeControlsValue.value.replace(/%/, ''));
-
-      evt.preventDefault();
     }
+
+    evt.preventDefault();
   };
 
   var uploadForm = document.querySelector('#upload-select-image');
