@@ -5,6 +5,9 @@
   var ESC_KEYCODE = 27;
 
   window.utils = {
+    ENTER_KEYCODE: ENTER_KEYCODE,
+    ESC_KEYCODE: ESC_KEYCODE,
+
     generateIntegerNumber: function (minNumber, maxNumber) {
       return Math.floor((maxNumber - minNumber + 1) * Math.random()) + minNumber;
     },

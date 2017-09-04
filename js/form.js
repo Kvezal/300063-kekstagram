@@ -66,4 +66,87 @@
   var uploadFormDescription = uploadForm.querySelector('.upload-form-description');
   uploadFormDescription.addEventListener('focus', fieldFocusHandler);
   uploadFormDescription.addEventListener('focusout', fieldFocusoutHandler);
+
+  var applyEffectImagePreview = function (elem) {
+    if (effectImagePreview.classList.contains(currentEffect)) {
+      effectImagePreview.classList.remove(currentEffect);
+    }
+
+    currentEffect = 'effect-' + elem.value;
+    effectImagePreview.classList.add(currentEffect);
+  };
+
+  var checkLimits = function (currentValue, minValue, maxValue) {
+    if (currentValue >= maxValue) {
+      return maxValue;
+    }
+
+    if (currentValue <= minValue) {
+      return minValue;
+    }
+
+    return currentValue;
+  };
+
+  var resizeImage = function (image, value) {
+    image.style.transform = 'scale(' + value / 100 + ')';
+  };
+
+  var changeUploadResizeControlsValue = function (target) {
+    var resultValue;
+    var valueField = +uploadResizeControlsValue.value.replace(/%/, '');
+    var stepField = +uploadResizeControlsValue.step.replace(/%/, '');
+    var minValueField = +uploadResizeControlsValue.min.replace(/%/, '');
+    var maxValueField = +uploadResizeControlsValue.max.replace(/%/, '');
+
+    switch (target.textContent) {
+      case '–':
+        resultValue = valueField - stepField;
+        break;
+      case '+':
+        resultValue = valueField + stepField;
+        break;
+    }
+
+    resultValue = checkLimits(resultValue, minValueField, maxValueField);
+
+    resizeImage(effectImagePreview, resultValue);
+
+    uploadResizeControlsValue.value = resultValue + '%';
+  };
+
+  var uploadEffectClickHandler = function (evt) {
+    if (evt.target.tagName === 'INPUT' && evt.target.type === 'radio') {
+      applyEffectImagePreview(evt.target);
+    }
+
+    if (evt.target.classList.contains('upload-resize-controls-button')) {
+      changeUploadResizeControlsValue(evt.target);
+    }
+  };
+
+  var uploadEffectKeydownHandler = function (evt) {
+    if (evt.keyCode === window.utils.ENTER_KEYCODE) {
+      if (evt.target.tagName === 'LABEL') {
+        var input = uploadEffect.querySelector('#' + evt.target.htmlFor);
+
+        if (input.type === 'radio') {
+          applyEffectImagePreview(input);
+        }
+      }
+
+      if (evt.target.classList.contains('upload-resize-controls-button')) {
+        checkUploadResizeControlsValue(evt.target);
+      }
+    }
+  };
+
+  var uploadEffect = document.querySelector('.upload-effect');
+  var effectImagePreview = uploadEffect.querySelector('.effect-image-preview');
+
+  var currentEffect = '';
+  uploadEffect.addEventListener('click', uploadEffectClickHandler);
+  uploadEffect.addEventListener('keydown', uploadEffectKeydownHandler);
+
+  var uploadResizeControlsValue = uploadEffect.querySelector('.upload-resize-controls-value');
 })();
