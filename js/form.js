@@ -19,11 +19,15 @@
     uploadFormCancel.removeEventListener('keydown', uploadFormCancelEnterPressHandler);
 
     uploadForm.reset();
+    resetCurrentEffect();
   };
 
   var formSubmitHandler = function (evt) {
     if (uploadFormDescription.value.length >= 30) {
-      uploadFormDescription.value = '';
+      hiddenUploadOverlay();
+
+      resizeImage(effectImagePreview, +uploadResizeControlsValue.value.replace(/%/, ''));
+
       evt.preventDefault();
     }
   };
@@ -67,10 +71,14 @@
   uploadFormDescription.addEventListener('focus', fieldFocusHandler);
   uploadFormDescription.addEventListener('focusout', fieldFocusoutHandler);
 
-  var applyEffectImagePreview = function (elem) {
+  var resetCurrentEffect = function () {
     if (effectImagePreview.classList.contains(currentEffect)) {
       effectImagePreview.classList.remove(currentEffect);
     }
+  };
+
+  var applyEffectImagePreview = function (elem) {
+    resetCurrentEffect();
 
     currentEffect = 'effect-' + elem.value;
     effectImagePreview.classList.add(currentEffect);
@@ -136,7 +144,7 @@
       }
 
       if (evt.target.classList.contains('upload-resize-controls-button')) {
-        checkUploadResizeControlsValue(evt.target);
+        changeUploadResizeControlsValue(evt.target);
       }
     }
   };
