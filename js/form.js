@@ -22,11 +22,11 @@
     resetCurrentEffect();
   };
 
-  var checkUploadFormHashtags = function () {
+  var checkUniquenessHashtags = function () {
     var hashtags = uploadFormHashtags.value.split(' ');
     var hashtagsLength = hashtags.length;
 
-    return hashtags.some(function (item, index) {
+    return !hashtags.some(function (item, index) {
       for (var i = index + 1; i < hashtagsLength; i++) {
         return hashtags[i] === item;
       }
@@ -36,13 +36,26 @@
   };
 
   var formSubmitHandler = function (evt) {
-    if (uploadFormDescription.value.length >= 30 && uploadFormHashtags.validity.valid && !checkUploadFormHashtags()) {
-      hiddenUploadOverlay();
+    evt.preventDefault();
 
-      resizeImage(effectImagePreview, +uploadResizeControlsValue.value.replace(/%/, ''));
+    if (!(uploadFormDescription.value.length >= 30)) {
+      return;
     }
 
-    evt.preventDefault();
+    if (!uploadFormHashtags.validity.valid) {
+      return;
+    }
+
+    if (!checkUniquenessHashtags()) {
+      return;
+    }
+
+    uploadFormHashtags.removeEventListener('change', fieldChangeHandler);
+    uploadFormDescription.removeEventListener('change', fieldChangeHandler);
+
+    hiddenUploadOverlay();
+
+    resizeImage(effectImagePreview, +uploadResizeControlsValue.value.replace(/%/, ''));
   };
 
   var uploadForm = document.querySelector('#upload-select-image');
@@ -76,13 +89,30 @@
     document.addEventListener('keydown', documentEscPressHandler);
   };
 
+  var fieldInvalidHandler = function (evt) {
+    if (!evt.target.validity.valid) {
+      evt.target.style.outline = '2px solid #ff0000';
+      evt.target.addEventListener('change', fieldChangeHandler);
+    }
+  };
+
+  var fieldChangeHandler = function (evt) {
+    if (evt.target.validity.valid) {
+      evt.target.style.outline = '';
+    } else {
+      evt.target.style.outline = '2px solid #ff0000';
+    }
+  };
+
   var uploadFormHashtags = uploadForm.querySelector('.upload-form-hashtags');
   uploadFormHashtags.addEventListener('focus', fieldFocusHandler);
   uploadFormHashtags.addEventListener('focusout', fieldFocusoutHandler);
+  uploadFormHashtags.addEventListener('invalid', fieldInvalidHandler);
 
   var uploadFormDescription = uploadForm.querySelector('.upload-form-description');
   uploadFormDescription.addEventListener('focus', fieldFocusHandler);
   uploadFormDescription.addEventListener('focusout', fieldFocusoutHandler);
+  uploadFormDescription.addEventListener('invalid', fieldInvalidHandler);
 
   var resetCurrentEffect = function () {
     if (effectImagePreview.classList.contains(currentEffect)) {
