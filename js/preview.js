@@ -38,7 +38,7 @@
 
       galleryOverlay.querySelector('.gallery-overlay-image').src = photos[elementNumber].url;
       galleryOverlay.querySelector('.likes-count').textContent = photos[elementNumber].likes;
-      galleryOverlay.querySelector('.comments-count').textContent = photos[elementNumber].comment.length;
+      galleryOverlay.querySelector('.comments-count').textContent = photos[elementNumber].comments.length;
     }
   };
 })();

@@ -42,9 +42,14 @@
 
     return !hashtags.some(function (item, index) {
       for (var i = index + 1; i < hashtagsLength; i++) {
-        return hashtags[i] === item;
+        if (hashtags[i] === item) {
+          displayErrorOutline(uploadFormHashtags);
+          uploadFormHashtags.setCustomValidity('Есть повторяющиеся хэш-теги');
+          return true;
+        }
       }
 
+      uploadFormHashtags.setCustomValidity('');
       return false;
     });
   };
@@ -67,9 +72,8 @@
     uploadFormHashtags.removeEventListener('change', fieldChangeHandler);
     uploadFormDescription.removeEventListener('change', fieldChangeHandler);
 
-    hiddenUploadOverlay();
+    window.backend.save(new FormData(uploadForm), hiddenUploadOverlay, window.backend.displayError);
 
-    resizeImage(effectImagePreview, +uploadResizeControlsValue.value.replace(/%/, ''));
   };
 
   var uploadForm = document.querySelector('#upload-select-image');
@@ -103,18 +107,22 @@
     document.addEventListener('keydown', documentEscPressHandler);
   };
 
-  var fieldInvalidHandler = function (evt) {
-    if (!evt.target.validity.valid) {
-      evt.target.style.outline = '2px solid #ff0000';
-      evt.target.addEventListener('change', fieldChangeHandler);
-    }
-  };
-
   var fieldChangeHandler = function (evt) {
-    if (evt.target.validity.valid) {
+    if (evt.target.validity.valid || checkUniquenessHashtags()) {
       evt.target.style.outline = '';
     } else {
       evt.target.style.outline = '2px solid #ff0000';
+    }
+  };
+
+  var displayErrorOutline = function (input) {
+    input.style.outline = '2px solid #ff0000';
+    input.addEventListener('change', fieldChangeHandler);
+  };
+
+  var fieldInvalidHandler = function (evt) {
+    if (!evt.target.validity.valid) {
+      displayErrorOutline(evt.target);
     }
   };
 

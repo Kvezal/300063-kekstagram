@@ -9,7 +9,7 @@
         var photoElement = pattern.cloneNode('true');
         photoElement.querySelector('img').src = photos[i].url;
         photoElement.querySelector('.picture-likes').textContent = photos[i].likes;
-        photoElement.querySelector('.picture-comments').textContent = photos[i].comment.length;
+        photoElement.querySelector('.picture-comments').textContent = photos[i].comments.length;
 
         photosBlock.appendChild(photoElement);
       }
