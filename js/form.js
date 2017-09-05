@@ -30,7 +30,7 @@
     pinPositionX = uploadEffectLevelLine['offsetWidth'];
     window.initializeScale(uploadEffectLevelPin, setValueScale);
 
-    var uploadEffectNone = document.querySelector('#upload-effect-none');
+    var uploadEffectNone = uploadEffect.querySelector('#upload-effect-none');
     window.initializeFilter(uploadEffectNone, applyEffectImagePreview);
 
     window.utils.hiddenElement(uploadOverlay);
