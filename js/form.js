@@ -21,13 +21,19 @@
   };
 
   var hiddenUploadOverlay = function () {
-    window.utils.hiddenElement(uploadOverlay);
-
     document.removeEventListener('keydown', documentEscPressHandler);
     uploadFormCancel.removeEventListener('keydown', uploadFormCancelEnterPressHandler);
 
     uploadForm.reset();
-    resetCurrentEffect();
+    resizeImage(effectImagePreview, 100);
+
+    pinPositionX = uploadEffectLevelLine['offsetWidth'];
+    window.initializeScale(uploadEffectLevelPin, setValueScale);
+
+    var uploadEffectNone = document.querySelector('#upload-effect-none');
+    window.initializeFilter(uploadEffectNone, applyEffectImagePreview);
+
+    window.utils.hiddenElement(uploadOverlay);
   };
 
   var checkUniquenessHashtags = function () {
@@ -140,6 +146,7 @@
         break;
       case 'none':
         effectValue = '';
+        window.utils.hiddenElement(uploadEffectLevel);
         break;
 
       default:
@@ -148,6 +155,7 @@
     }
 
     effectImagePreview.style.filter = effectValue;
+    pinPositionX = uploadEffectLevelLine['offsetWidth'];
   };
 
   var applyEffectImagePreview = function (elem) {
@@ -156,20 +164,18 @@
     resetCurrentEffect();
 
     currentEffect = 'effect-' + currentRadio;
+
+    window.utils.showElement(uploadEffectLevel);
+
     changeFilter(currentRadio, 1);
 
     if (currentRadio === 'none') {
       currentEffect = '';
-      window.utils.hiddenElement(uploadEffectLevel);
       return;
     }
-
-    window.utils.showElement(uploadEffectLevel);
     effectImagePreview.classList.add(currentEffect);
 
-    var maxScaleValue = uploadEffectLevelLine['offsetWidth'];
-    setPinPosition(uploadEffectLevelPin, maxScaleValue);
-    setScaleWidth(uploadEffectLevelVal, maxScaleValue, maxScaleValue);
+    window.initializeScale(uploadEffectLevelPin, setValueScale);
   };
 
   var checkLimits = function (currentValue, minValue, maxValue) {
@@ -186,6 +192,10 @@
 
   var resizeImage = function (image, value) {
     image.style.transform = 'scale(' + value / 100 + ')';
+
+    if (value === 100) {
+      image.style.transform = '';
+    }
   };
 
   var changeUploadResizeControlsValue = function (target) {
@@ -213,11 +223,11 @@
 
   var uploadEffectClickHandler = function (evt) {
     if (evt.target.tagName === 'INPUT' && evt.target.type === 'radio') {
-      applyEffectImagePreview(evt.target);
+      window.initializeFilter(evt.target, applyEffectImagePreview);
     }
 
     if (evt.target.classList.contains('upload-resize-controls-button')) {
-      changeUploadResizeControlsValue(evt.target);
+      window.initializeScale(evt.target, changeUploadResizeControlsValue);
     }
   };
 
@@ -227,12 +237,8 @@
         var input = uploadEffect.querySelector('#' + evt.target.htmlFor);
 
         if (input.type === 'radio') {
-          applyEffectImagePreview(input);
+          window.initializeFilter(input, applyEffectImagePreview);
         }
-      }
-
-      if (evt.target.classList.contains('upload-resize-controls-button')) {
-        changeUploadResizeControlsValue(evt.target);
       }
     }
   };
@@ -247,6 +253,14 @@
   uploadEffect.addEventListener('keydown', uploadEffectKeyDownHandler);
 
   var uploadResizeControlsValue = uploadEffect.querySelector('.upload-resize-controls-value');
+
+  var setScaleWidth = function (scale, value, maxValue) {
+    var scaleValue = value / maxValue;
+
+    scale.style.width = scaleValue * 100 + '%';
+
+    return scaleValue;
+  };
 
   var setPinPosition = function (elem, position) {
     var minLocationPositionX = 0;
@@ -264,19 +278,19 @@
 
     elem.style.left = position + 'px';
 
-    return position;
-  };
-
-  var setScaleWidth = function (scale, value, maxValue) {
-    var scaleValue = value / maxValue;
-
-    scale.style.width = scaleValue * 100 + '%';
-
-    return scaleValue;
+    var scaleValue = setScaleWidth(uploadEffectLevelVal, position, maxLocationPositionX);
+    changeFilter(currentRadio, scaleValue);
   };
 
   var uploadEffectLevel = uploadEffect.querySelector('.upload-effect-level');
   var uploadEffectLevelLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
+
+  var pinPositionX = uploadEffectLevelLine['offsetWidth'];
+
+  var setValueScale = function (elem) {
+    setPinPosition(elem, pinPositionX);
+  };
+
   var uploadEffectLevelVal = uploadEffectLevel.querySelector('.upload-effect-level-val');
   var uploadEffectLevelPin = uploadEffectLevelLine.querySelector('.upload-effect-level-pin');
   uploadEffectLevelPin.addEventListener('mousedown', function (evt) {
@@ -291,12 +305,9 @@
 
       startCoordsX = moveEvt.clientX;
 
-      var pinPositionX = uploadEffectLevelPin.offsetLeft - shiftX;
+      pinPositionX = uploadEffectLevelPin.offsetLeft - shiftX;
 
-      var position = setPinPosition(uploadEffectLevelPin, pinPositionX);
-      var scaleValue = setScaleWidth(uploadEffectLevelVal, position, uploadEffectLevelLine.offsetWidth);
-
-      changeFilter(currentRadio, scaleValue);
+      window.initializeScale(uploadEffectLevelPin, setValueScale);
     };
 
     var mouseUpHandler = function (upEvt) {
