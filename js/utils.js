@@ -22,6 +22,18 @@
       if (evt.keyCode === ESC_KEYCODE) {
         action();
       }
+    },
+
+    hiddenElement: function (elem) {
+      if (!elem.classList.contains('hidden')) {
+        elem.classList.add('hidden');
+      }
+    },
+
+    showElement: function (elem) {
+      if (elem.classList.contains('hidden')) {
+        elem.classList.remove('hidden');
+      }
     }
   };
 })();

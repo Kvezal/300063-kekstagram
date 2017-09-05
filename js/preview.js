@@ -2,10 +2,17 @@
 
 (function () {
   var showGalleryOverlay = function () {
-    galleryOverlay.classList.remove('hidden');
+    window.utils.showElement(galleryOverlay);
 
     closePreview.addEventListener('keydown', closePreviewEnterPressHandler);
     document.addEventListener('keydown', documentEscPressHandler);
+  };
+
+  var hiddenGalleryOverlay = function () {
+    window.utils.hiddenElement(galleryOverlay);
+
+    closePreview.removeEventListener('keydown', closePreviewEnterPressHandler);
+    document.removeEventListener('keydown', documentEscPressHandler);
   };
 
   var documentEscPressHandler = function (evt) {
@@ -18,13 +25,6 @@
 
   var closePreviewEnterPressHandler = function (evt) {
     window.utils.isEnterEvent(evt, hiddenGalleryOverlay);
-  };
-
-  var hiddenGalleryOverlay = function () {
-    galleryOverlay.classList.add('hidden');
-
-    closePreview.removeEventListener('keydown', closePreviewEnterPressHandler);
-    document.removeEventListener('keydown', documentEscPressHandler);
   };
 
   var galleryOverlay = document.querySelector('.gallery-overlay');
