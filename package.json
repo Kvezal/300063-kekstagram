@@ -28,7 +28,7 @@
     "test": "eslint js/",
     "build": "gulp build",
     "start": "npm run build && gulp serve",
-    "pub": "gulp deploy"
+    "pub": "npm run build && gulp deploy"
   },
   "engines": {
     "node": "^6.10"
