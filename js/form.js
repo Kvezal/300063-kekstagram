@@ -177,10 +177,6 @@
 
     changeFilter(currentRadio, 1);
 
-    if (currentRadio === 'none') {
-      currentEffect = '';
-      return;
-    }
     effectImagePreview.classList.add(currentEffect);
 
     window.initializeScale(uploadEffectLevelPin, setValueScale);
@@ -254,8 +250,8 @@
   var uploadEffect = document.querySelector('.upload-effect');
   var effectImagePreview = uploadEffect.querySelector('.effect-image-preview');
 
-  var currentEffect = '';
   var currentRadio = 'none';
+  var currentEffect = 'effect-' + currentRadio;
 
   uploadEffect.addEventListener('click', uploadEffectClickHandler);
   uploadEffect.addEventListener('keydown', uploadEffectKeyDownHandler);
