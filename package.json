@@ -14,12 +14,21 @@
   "homepage": "https://github.com/htmlacademy-javascript/300063-kekstagram",
   "license": "MIT",
   "devDependencies": {
+    "browser-sync": "^2.18.12",
+    "del": "^3.0.0",
     "eslint": "3.9.0",
-    "eslint-config-htmlacademy": "0.2.x"
+    "eslint-config-htmlacademy": "0.2.x",
+    "gulp": "^3.9.1",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-rename": "^1.2.2",
+    "run-sequence": "^1.2.2"
   },
   "dependencies": {},
   "scripts": {
-    "test": "eslint js/"
+    "test": "eslint js/",
+    "build": "gulp build",
+    "start": "npm run build && gulp serve",
+    "pub": "gulp deploy"
   },
   "engines": {
     "node": "^6.10"
