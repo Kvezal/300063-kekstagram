@@ -4,11 +4,13 @@
   var pictures = document.querySelector('.pictures');
 
   var randeringPhotos = function (photos) {
+    while (pictures.firstChild) {
+      pictures.removeChild(pictures.firstChild);
+    }
+
     var picturesFragment = window.picture.create(photos, pictureTemplate, photos.length);
 
-    var pictures = document.querySelector('.pictures');
     pictures.appendChild(picturesFragment);
-
 
     var galleryClickHandler = function (evt) {
       var target = evt.target;
@@ -37,28 +39,32 @@
     });
   };
 
-  var randeringFilters = function (photos) {
-    var filtersBlock = document.querySelector('.filters');
-    filtersBlock.classList.remove('hidden');
+  var filtersBlockClickHandler = function (evt) {
+    var target = evt.target;
 
-    filtersBlock.addEventListener('click', function (evt) {
-      var target = evt.target;
+    if (!target.classList.contains('filters-radio')) {
+      return;
+    }
 
-      if (!target.classList.contains('filters-radio')) {
-        return;
-      }
-      while (pictures.firstChild) {
-        pictures.removeChild(pictures.firstChild);
-      }
+    window.debounce(function () {
       randeringPhotos(window.filters[target.value](photos));
     });
   };
 
-  var seccessHandler = function (data) {
-    randeringPhotos(data);
-    randeringFilters(data);
+  var filterPhotos = function () {
+    var filtersBlock = document.querySelector('.filters');
+    filtersBlock.classList.remove('hidden');
+
+    filtersBlock.addEventListener('click', filtersBlockClickHandler);
   };
 
+  var seccessHandler = function (data) {
+    photos = data;
+    randeringPhotos(data);
+    filterPhotos();
+  };
+
+  var photos;
   window.backend.load(seccessHandler, window.backend.displayError);
 
   var pictureTemplate = document.querySelector('#picture-template').content;
